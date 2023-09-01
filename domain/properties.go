@@ -1,6 +1,8 @@
 package domain
 
-import "context"
+import (
+	"github.com/gin-gonic/gin"
+)
 
 const (
 	CollectionProperties = "properties"
@@ -15,11 +17,15 @@ type Properties struct {
 }
 
 type PropertiesRepository interface {
-	Fetch(c context.Context) ([]Properties, error)
-	FetchByApplicationAndProfile(c context.Context, application string, profile string) ([]Properties, error)
+	Fetch(c *gin.Context) ([]Properties, error)
+	FetchByApplicationAndProfile(c *gin.Context, application string, profile string) ([]Properties, error)
 }
 
 type PropertiesUseCase interface {
-	GetProperties(c context.Context) ([]Properties, error)
-	GetByApplicationAndProfile(c context.Context, application string, profile string) ([]Properties, error)
+	GetProperties(c *gin.Context) ([]Properties, error)
+	GetByApplicationAndProfile(c *gin.Context, application string, profile string) ([]Properties, error)
+}
+
+type PropertiesClient interface {
+	GetByApplicationAndProfile(c *gin.Context, application string, profile string) ([]Properties, error)
 }
