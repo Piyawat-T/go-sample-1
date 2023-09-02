@@ -9,6 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/uptrace/opentelemetry-go-extra/otelzap"
 	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/propagation"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type propertiesClient struct {
@@ -37,11 +40,14 @@ func (pc *propertiesClient) GetByApplicationAndProfile(c *gin.Context, applicati
 	// ctx = httptrace.WithClientTrace(ctx, clientTrace)
 
 	// tracer := otel.Tracer("hello-world-frontend")
-	// otel.SetTextMapPropagator(propagation.TraceContext{})
+	otel.SetTextMapPropagator(propagation.TraceContext{})
 	// ctx, span := tracer.Start(ctx, "client")
 	// defer span.End()
 
 	// span.AddEvent("Launching Request to backend")
+
+	span := trace.SpanFromContext(ctx)
+	log.DebugContext(ctx, span.SpanContext().TraceID().String())
 
 	req, err := http.NewRequestWithContext(ctx, "GET", "http://localhost:8100/go-centralize-configuration/deposit/default", nil)
 	if err != nil {
